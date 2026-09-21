@@ -1,6 +1,6 @@
 {
   "name": "@jevcal/adapter-gateway",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "jevcal backend adapter for any OpenAI-compatible chat-completions endpoint (Vercel AI Gateway, OpenAI, etc).",
   "license": "MIT",
   "type": "module",
@@ -14,7 +14,9 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

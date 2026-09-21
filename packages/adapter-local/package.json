@@ -1,6 +1,6 @@
 {
   "name": "@jevcal/adapter-local",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "jevcal backend adapter for harshatheg/Qwen-2.5-1B-RLCD, an open local reproduction of Jev-style structured decisions, served via mlx_lm.server.",
   "license": "MIT",
   "type": "module",
@@ -14,7 +14,9 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

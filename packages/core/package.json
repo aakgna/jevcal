@@ -1,6 +1,6 @@
 {
   "name": "@jevcal/core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Typed decision schemas, backend routing, and calibration metrics (ECE, Brier, reliability diagrams) for LLM-driven structured decisions.",
   "license": "MIT",
   "type": "module",
@@ -14,7 +14,9 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

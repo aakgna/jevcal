@@ -1,6 +1,6 @@
 {
   "name": "@jevcal/vercel-ai",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "jevcal middleware for the Vercel AI SDK — logs structured decisions and their confidence for calibration tracking.",
   "license": "MIT",
   "type": "module",
@@ -14,7 +14,9 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

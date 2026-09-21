@@ -1,6 +1,6 @@
 {
   "name": "@jevcal/adapter-jev",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "jevcal backend adapter for Typesafe AI's Jev model via the Vercel AI Gateway's evaluation-model interface (ai@7 experimental_evaluate) — maps typed decision fields onto choice/score/boolean questions.",
   "license": "MIT",
   "type": "module",
@@ -14,7 +14,9 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
