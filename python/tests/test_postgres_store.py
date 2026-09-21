@@ -1,3 +1,4 @@
+import os
 from concurrent.futures import ThreadPoolExecutor
 
 import pytest
@@ -7,7 +8,10 @@ psycopg = pytest.importorskip("psycopg")
 from jevcal import DecisionResult, FieldPrediction, OutcomeLabel, SelfReportedSignal, get_calibration  # noqa: E402
 from jevcal.postgres_store import PostgresStore  # noqa: E402
 
-CONNINFO = "dbname=jevcal_stress_test"
+# Defaults to the local dev database (Homebrew Postgres, peer auth via Unix
+# socket). CI overrides this to point at a Docker service container instead
+# (TCP + password auth) via JEVCAL_TEST_POSTGRES_DSN.
+CONNINFO = os.environ.get("JEVCAL_TEST_POSTGRES_DSN", "dbname=jevcal_stress_test")
 
 
 @pytest.fixture

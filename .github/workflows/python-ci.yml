@@ -1,0 +1,44 @@
+name: Python CI
+
+on:
+  push:
+    branches: [main]
+    paths: ["python/**", ".github/workflows/python-ci.yml"]
+  pull_request:
+    paths: ["python/**", ".github/workflows/python-ci.yml"]
+
+defaults:
+  run:
+    working-directory: python
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: jevcal_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      # Overrides the local-dev default in tests/test_postgres_store.py — the
+      # service container above needs TCP + password auth, not the Unix-socket
+      # peer auth a local Homebrew/system Postgres uses.
+      JEVCAL_TEST_POSTGRES_DSN: "host=localhost port=5432 dbname=jevcal_test user=postgres password=postgres"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev,postgres]"
+      - run: pip install build
+      - run: pytest -v
+      - run: python -m build
