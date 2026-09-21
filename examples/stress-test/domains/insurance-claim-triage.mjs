@@ -5,8 +5,12 @@ import { bool, choice, randInt } from "../lib/rng.mjs";
 export const decision = defineDecision({
   name: "insurance-claim-triage",
   fields: z.object({
-    autoApprove: z.boolean().describe("Whether this claim can be automatically approved without manual review"),
-    priority: z.enum(["low", "medium", "high"]).describe("Review priority if manual review is needed"),
+    autoApprove: z
+      .boolean()
+      .describe("Whether this claim can be automatically approved without manual review"),
+    priority: z
+      .enum(["low", "medium", "high"])
+      .describe("Review priority if manual review is needed"),
   }),
 });
 
@@ -34,7 +38,13 @@ export function generateCase(rng, index) {
     hasSupportingDocs = true;
   }
 
-  return { claimAmount, priorClaims, fraudFlags, hasSupportingDocs, yearsAsCustomer: randInt(rng, 0, 15) };
+  return {
+    claimAmount,
+    priorClaims,
+    fraudFlags,
+    hasSupportingDocs,
+    yearsAsCustomer: randInt(rng, 0, 15),
+  };
 }
 
 export function describeCase(c) {
@@ -47,6 +57,7 @@ export function describeCase(c) {
 
 export function groundTruth(c) {
   return {
-    autoApprove: c.hasSupportingDocs && c.fraudFlags === 0 && c.claimAmount <= 25000 && c.priorClaims <= 2,
+    autoApprove:
+      c.hasSupportingDocs && c.fraudFlags === 0 && c.claimAmount <= 25000 && c.priorClaims <= 2,
   };
 }

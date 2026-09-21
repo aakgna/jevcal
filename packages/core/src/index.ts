@@ -6,7 +6,12 @@ export { computeBrierScore, computeECE, computeReliabilityDiagram } from "./cali
 export { getCalibration } from "./report.js";
 export type { CalibrationReport, GetCalibrationOptions } from "./report.js";
 
-export { buildFieldPredictions, DecisionRouter, extractSelfReported, normalizeConfidence } from "./router.js";
+export {
+  buildFieldPredictions,
+  DecisionRouter,
+  extractSelfReported,
+  normalizeConfidence,
+} from "./router.js";
 export type { DecisionRouterConfig } from "./router.js";
 
 export { JsonlStore } from "./store/jsonl.js";

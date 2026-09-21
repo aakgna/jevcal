@@ -5,7 +5,9 @@ import { bool, choice, randFloat } from "../lib/rng.mjs";
 export const decision = defineDecision({
   name: "expense-report-fraud",
   fields: z.object({
-    flagForReview: z.boolean().describe("Whether this expense line item should be flagged for manual review"),
+    flagForReview: z
+      .boolean()
+      .describe("Whether this expense line item should be flagged for manual review"),
     riskCategory: z.enum(["low", "medium", "high"]).describe("Fraud risk category"),
   }),
 });
@@ -35,7 +37,14 @@ export function generateCase(rng, index) {
     duplicateSubmission = false;
   }
 
-  return { category, amount, limit, hasReceipt, duplicateSubmission, submittedOnWeekend: bool(rng, 0.2) };
+  return {
+    category,
+    amount,
+    limit,
+    hasReceipt,
+    duplicateSubmission,
+    submittedOnWeekend: bool(rng, 0.2),
+  };
 }
 
 export function describeCase(c) {

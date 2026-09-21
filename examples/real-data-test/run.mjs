@@ -9,7 +9,7 @@
 //   node --env-file=../../.env run.mjs
 import { readFile, writeFile } from "node:fs/promises";
 import { GatewayAdapter } from "@jevcal/adapter-gateway";
-import { defineDecision, DecisionRouter, getCalibration, JsonlStore } from "@jevcal/core";
+import { DecisionRouter, JsonlStore, defineDecision, getCalibration } from "@jevcal/core";
 import { z } from "zod";
 // Reused as-is from the stress test — same rate-limited, checkpointed runner.
 import { makeRng } from "../stress-test/lib/rng.mjs";
@@ -53,9 +53,11 @@ function parseRow(row) {
 }
 
 function describeCase(c) {
-  const loanAmountText = c.loanAmount != null ? `$${(c.loanAmount * 1000).toLocaleString()}` : "not reported";
+  const loanAmountText =
+    c.loanAmount != null ? `$${(c.loanAmount * 1000).toLocaleString()}` : "not reported";
   const loanTermText = c.loanTerm != null ? `${c.loanTerm} months` : "not reported";
-  const creditHistoryText = c.creditHistory === 1 ? "yes" : c.creditHistory === 0 ? "no" : "not on file";
+  const creditHistoryText =
+    c.creditHistory === 1 ? "yes" : c.creditHistory === 0 ? "no" : "not on file";
   return (
     `Loan application: ${c.gender} applicant, marital status: ${c.married}, ${c.dependents} dependents, ` +
     `education: ${c.education}, self-employed: ${c.selfEmployed}. Applicant income: $${c.applicantIncome}/month, ` +
@@ -75,7 +77,9 @@ async function main() {
   let rows = parseCsv(raw).map(parseRow);
   const countArg = process.argv.find((a) => a.startsWith("--count="));
   if (countArg) rows = rows.slice(0, Number(countArg.split("=")[1]));
-  console.log(`Loaded ${rows.length} real loan applications from the Loan Prediction Problem dataset.`);
+  console.log(
+    `Loaded ${rows.length} real loan applications from the Loan Prediction Problem dataset.`,
+  );
 
   const store = new JsonlStore(STORE_PATH);
   const backend = new GatewayAdapter({
@@ -99,16 +103,30 @@ async function main() {
     requestDelayMs: 120,
     checkpointPath: ".jevcal/checkpoints/loan-approval-real.json",
     onProgress: ({ done, failed, total, elapsedSec, rate }) => {
-      console.log(`  ${done}/${total} done (${failed} failed) — ${rate.toFixed(1)}/s — elapsed ${elapsedSec.toFixed(0)}s`);
+      console.log(
+        `  ${done}/${total} done (${failed} failed) — ${rate.toFixed(1)}/s — elapsed ${elapsedSec.toFixed(0)}s`,
+      );
     },
   });
 
-  const calibration = await getCalibration(store, { decisionName: decision.name, field: "approved" });
-  const correct = calibration.reliability.reduce((sum, b) => sum + b.observedFrequency * b.sampleCount, 0);
+  const calibration = await getCalibration(store, {
+    decisionName: decision.name,
+    field: "approved",
+  });
+  const correct = calibration.reliability.reduce(
+    (sum, b) => sum + b.observedFrequency * b.sampleCount,
+    0,
+  );
 
-  console.log(`\nDone: ${runResult.done} calls, ${runResult.failed} failed, ${runResult.elapsedSec.toFixed(0)}s`);
-  console.log(`Accuracy: ${((correct / calibration.n) * 100).toFixed(1)}% (${Math.round(correct)}/${calibration.n})`);
-  console.log(`ECE: ${calibration.ece.toFixed(3)}   Brier: ${calibration.brier.toFixed(3)}   n=${calibration.n}`);
+  console.log(
+    `\nDone: ${runResult.done} calls, ${runResult.failed} failed, ${runResult.elapsedSec.toFixed(0)}s`,
+  );
+  console.log(
+    `Accuracy: ${((correct / calibration.n) * 100).toFixed(1)}% (${Math.round(correct)}/${calibration.n})`,
+  );
+  console.log(
+    `ECE: ${calibration.ece.toFixed(3)}   Brier: ${calibration.brier.toFixed(3)}   n=${calibration.n}`,
+  );
   console.log("\nReliability:");
   for (const bin of calibration.reliability) {
     if (bin.sampleCount === 0) continue;
@@ -119,7 +137,9 @@ async function main() {
   }
 
   const baseRate = rows.filter((r) => r.approved).length / rows.length;
-  console.log(`\n(For reference: ${(baseRate * 100).toFixed(1)}% of real applicants in this dataset were actually approved.)`);
+  console.log(
+    `\n(For reference: ${(baseRate * 100).toFixed(1)}% of real applicants in this dataset were actually approved.)`,
+  );
 }
 
 main().catch((err) => {

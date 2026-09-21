@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
-import { BaseCallbackHandler } from "@langchain/core/callbacks/base";
-import type { LLMResult } from "@langchain/core/outputs";
 import { buildFieldPredictions, extractSelfReported } from "@jevcal/core";
 import type { ConfidenceSignal, DecisionSchema, DecisionStore } from "@jevcal/core";
+import { BaseCallbackHandler } from "@langchain/core/callbacks/base";
+import type { LLMResult } from "@langchain/core/outputs";
 
 /**
  * Logs structured decisions produced through LangChain.js (e.g. a model wrapped
@@ -40,7 +40,7 @@ export class JevCalCallbackHandler extends BaseCallbackHandler {
       this.warnedLogprobUnsupported = true;
       console.warn(
         '[jevcal] JevCalCallbackHandler does not support confidence: "logprob" — LangChain.js callbacks don\'t ' +
-          'reliably expose per-token logprobs across providers. Falling back to no confidence signal for this run.',
+          "reliably expose per-token logprobs across providers. Falling back to no confidence signal for this run.",
       );
     }
 
@@ -50,7 +50,10 @@ export class JevCalCallbackHandler extends BaseCallbackHandler {
         : {
             values: parsed,
             confidenceSignals: Object.fromEntries(
-              this.decision.fieldNames.map((f) => [String(f), { kind: "none" } as ConfidenceSignal]),
+              this.decision.fieldNames.map((f) => [
+                String(f),
+                { kind: "none" } as ConfidenceSignal,
+              ]),
             ),
           };
 

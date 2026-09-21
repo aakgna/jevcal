@@ -1,4 +1,4 @@
-import { mkdir, readFile, appendFile } from "node:fs/promises";
+import { appendFile, mkdir, readFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import type {
   DecisionInput,
@@ -39,7 +39,9 @@ export class JsonlStore implements DecisionStore {
     await this.appendLine({ kind: "outcome", requestId, outcome });
   }
 
-  async getRecords(query?: { decisionName?: string; since?: string }): Promise<LoggedDecisionRecord[]> {
+  async getRecords(query?: { decisionName?: string; since?: string }): Promise<
+    LoggedDecisionRecord[]
+  > {
     const lines = await this.readLines();
     const records = new Map<string, LoggedDecisionRecord>();
 
@@ -82,7 +84,8 @@ export class JsonlStore implements DecisionStore {
       results = results.filter((r) => r.decisionName === query.decisionName);
     }
     if (query?.since) {
-      results = results.filter((r) => r.timestamp >= query.since!);
+      const since = query.since;
+      results = results.filter((r) => r.timestamp >= since);
     }
     return results;
   }

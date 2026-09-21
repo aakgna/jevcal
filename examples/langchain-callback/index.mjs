@@ -2,7 +2,7 @@
 // https://ai-gateway.vercel.sh/v1 with AI_GATEWAY_API_KEY instead).
 //
 //   OPENAI_API_KEY=... node index.mjs
-import { defineDecision, JsonlStore } from "@jevcal/core";
+import { JsonlStore, defineDecision } from "@jevcal/core";
 import { JevCalCallbackHandler } from "@jevcal/langchain";
 import { ChatOpenAI } from "@langchain/openai";
 import { z } from "zod";
@@ -26,4 +26,6 @@ const result = await model.invoke(
 );
 
 console.log("Decision:", result);
-console.log("\nLogged to .jevcal/decisions.jsonl — same store, same `jevcal report` command as every other adapter.");
+console.log(
+  "\nLogged to .jevcal/decisions.jsonl — same store, same `jevcal report` command as every other adapter.",
+);

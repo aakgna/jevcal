@@ -71,8 +71,7 @@ export function buildFieldPredictions<Shape extends z.ZodRawShape>(
     if (probability === null && !warnedNoConfidence) {
       warnedNoConfidence = true;
       console.warn(
-        `[jevcal] No confidence signal for field "${fieldKey}" (decision "${decision.name}") — ` +
-          "probability recorded as null and excluded from calibration metrics. This warning prints once per process.",
+        `[jevcal] No confidence signal for field "${fieldKey}" (decision "${decision.name}") — probability recorded as null and excluded from calibration metrics. This warning prints once per process.`,
       );
     }
 

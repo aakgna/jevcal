@@ -63,7 +63,14 @@ export async function runDomain({
     await saveCheckpoint(checkpointPath, completed);
     const elapsedSec = (Date.now() - startTime) / 1000;
     const rate = elapsedSec > 0 ? (completed.size - initialDone) / elapsedSec : 0;
-    onProgress?.({ name, done: completed.size, failed: failedCount, total: count, elapsedSec, rate });
+    onProgress?.({
+      name,
+      done: completed.size,
+      failed: failedCount,
+      total: count,
+      elapsedSec,
+      rate,
+    });
   }
 
   async function worker() {
@@ -74,7 +81,6 @@ export async function runDomain({
       const truth = groundTruth(caseData);
 
       let attempt = 0;
-      // biome-ignore lint/correctness/noConstantCondition: retry loop, exits via break
       while (true) {
         try {
           const result = await router.decide(decision, { input: state });
@@ -104,7 +110,9 @@ export async function runDomain({
     }
   }
 
-  const workers = Array.from({ length: Math.min(concurrency, pending.length) || 1 }, () => worker());
+  const workers = Array.from({ length: Math.min(concurrency, pending.length) || 1 }, () =>
+    worker(),
+  );
   await Promise.all(workers);
   await saveAndReport();
 

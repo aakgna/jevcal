@@ -38,20 +38,21 @@ export function generateCase(rng, index) {
     fromKnownContact = bool(rng, 0.5);
   }
 
-  return { senderDomainMismatch, containsSuspiciousLink, requestsCredentials, containsUrgencyLanguage, fromKnownContact };
+  return {
+    senderDomainMismatch,
+    containsSuspiciousLink,
+    requestsCredentials,
+    containsUrgencyLanguage,
+    fromKnownContact,
+  };
 }
 
 export function describeCase(c) {
-  return (
-    "Email analysis: sender domain does not match the claimed organization: " +
-    `${c.senderDomainMismatch ? "yes" : "no"}. Contains a suspicious or shortened link: ` +
-    `${c.containsSuspiciousLink ? "yes" : "no"}. Directly requests login credentials or payment info: ` +
-    `${c.requestsCredentials ? "yes" : "no"}. Uses urgent, pressuring language: ` +
-    `${c.containsUrgencyLanguage ? "yes" : "no"}. From a contact the recipient has emailed before: ` +
-    `${c.fromKnownContact ? "yes" : "no"}.`
-  );
+  return `Email analysis: sender domain does not match the claimed organization: ${c.senderDomainMismatch ? "yes" : "no"}. Contains a suspicious or shortened link: ${c.containsSuspiciousLink ? "yes" : "no"}. Directly requests login credentials or payment info: ${c.requestsCredentials ? "yes" : "no"}. Uses urgent, pressuring language: ${c.containsUrgencyLanguage ? "yes" : "no"}. From a contact the recipient has emailed before: ${c.fromKnownContact ? "yes" : "no"}.`;
 }
 
 export function groundTruth(c) {
-  return { isPhishing: c.requestsCredentials || (c.senderDomainMismatch && c.containsSuspiciousLink) };
+  return {
+    isPhishing: c.requestsCredentials || (c.senderDomainMismatch && c.containsSuspiciousLink),
+  };
 }

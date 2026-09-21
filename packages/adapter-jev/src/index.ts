@@ -65,11 +65,16 @@ function buildQuestions<Shape extends z.ZodRawShape>(
 
     if (zodType instanceof z.ZodBoolean) {
       fieldTypes[fieldKey] = "bool";
-      questions[fieldKey] = { type: boolTypeName, instructions, criteria: config.booleanCriteria?.[fieldKey] };
+      questions[fieldKey] = {
+        type: boolTypeName,
+        instructions,
+        criteria: config.booleanCriteria?.[fieldKey],
+      };
     } else if (zodType instanceof z.ZodEnum) {
       fieldTypes[fieldKey] = "choice";
       const options = zodType.options as string[];
-      const criteria = config.choiceCriteria?.[fieldKey] ?? Object.fromEntries(options.map((o) => [o, o]));
+      const criteria =
+        config.choiceCriteria?.[fieldKey] ?? Object.fromEntries(options.map((o) => [o, o]));
       questions[fieldKey] = { type: "choice", instructions, criteria };
     } else if (zodType instanceof z.ZodNumber) {
       const criteria = config.scoreCriteria?.[fieldKey];
@@ -158,7 +163,9 @@ export class JevAdapter implements BackendAdapter {
     });
 
     if (!res.ok) {
-      throw new Error(`JevAdapter (direct) request failed: ${res.status} ${res.statusText} — ${await res.text()}`);
+      throw new Error(
+        `JevAdapter (direct) request failed: ${res.status} ${res.statusText} — ${await res.text()}`,
+      );
     }
 
     const body = (await res.json()) as DirectResponse;
@@ -213,9 +220,8 @@ export class JevAdapter implements BackendAdapter {
       questions: questions as Record<string, Experimental_EvaluationQuestion>,
     });
 
-    const typesafeConfidence = (result.providerMetadata as Record<string, unknown> | undefined)?.typesafe as
-      | { confidence?: Record<string, number> }
-      | undefined;
+    const typesafeConfidence = (result.providerMetadata as Record<string, unknown> | undefined)
+      ?.typesafe as { confidence?: Record<string, number> } | undefined;
 
     const values: Record<string, unknown> = {};
     const confidenceSignals: Record<string, ConfidenceSignal> = {};
@@ -242,7 +248,11 @@ export class JevAdapter implements BackendAdapter {
         const distribution = answer.probabilities;
         const fallback = distribution ? Math.max(0, ...Object.values(distribution)) : 0;
         values[fieldKey] = answer.type === "choice" ? answer.choice : answer.score;
-        confidenceSignals[fieldKey] = { kind: "native", probability: reported ?? fallback, distribution };
+        confidenceSignals[fieldKey] = {
+          kind: "native",
+          probability: reported ?? fallback,
+          distribution,
+        };
       }
     }
 

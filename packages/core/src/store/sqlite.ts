@@ -90,7 +90,9 @@ export class SqliteStore implements DecisionStore {
     });
   }
 
-  async getRecords(query?: { decisionName?: string; since?: string }): Promise<LoggedDecisionRecord[]> {
+  async getRecords(query?: { decisionName?: string; since?: string }): Promise<
+    LoggedDecisionRecord[]
+  > {
     const db = await this.db;
     let sql = "SELECT * FROM decisions";
     const conditions: string[] = [];

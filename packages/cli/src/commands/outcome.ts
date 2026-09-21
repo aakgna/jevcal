@@ -20,6 +20,12 @@ export async function outcomeCommand(args: string[]): Promise<void> {
   const store = new JsonlStore(opts.store || undefined);
   const actualValue = parseValue(actualValueRaw);
 
-  await store.attachOutcome(requestId, { field, actualValue, observedAt: new Date().toISOString() });
-  console.log(`Attached outcome: ${field} = ${JSON.stringify(actualValue)} for request ${requestId}`);
+  await store.attachOutcome(requestId, {
+    field,
+    actualValue,
+    observedAt: new Date().toISOString(),
+  });
+  console.log(
+    `Attached outcome: ${field} = ${JSON.stringify(actualValue)} for request ${requestId}`,
+  );
 }

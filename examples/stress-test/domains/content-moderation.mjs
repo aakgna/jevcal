@@ -5,7 +5,9 @@ import { bool, choice, randInt } from "../lib/rng.mjs";
 export const decision = defineDecision({
   name: "content-moderation",
   fields: z.object({
-    violatesPolicy: z.boolean().describe("Whether this post violates community guidelines and should be removed"),
+    violatesPolicy: z
+      .boolean()
+      .describe("Whether this post violates community guidelines and should be removed"),
     severity: z.enum(["low", "medium", "high"]).describe("Severity if it does violate policy"),
   }),
 });
@@ -39,7 +41,13 @@ export function generateCase(rng, index) {
     spamRepeatCount = choice(rng, [2, 3]); // right at the spam threshold
   }
 
-  return { containsSlur, containsExplicitThreat, targetsIndividual, profanityCount, spamRepeatCount };
+  return {
+    containsSlur,
+    containsExplicitThreat,
+    targetsIndividual,
+    profanityCount,
+    spamRepeatCount,
+  };
 }
 
 export function describeCase(c) {

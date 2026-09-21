@@ -5,7 +5,9 @@ import { bool, choice, randInt } from "../lib/rng.mjs";
 export const decision = defineDecision({
   name: "job-application-screening",
   fields: z.object({
-    advanceToInterview: z.boolean().describe("Whether this applicant should advance to an interview"),
+    advanceToInterview: z
+      .boolean()
+      .describe("Whether this applicant should advance to an interview"),
     fitLevel: z.enum(["low", "medium", "high"]).describe("Overall fit for the role"),
   }),
 });
@@ -30,19 +32,21 @@ export function generateCase(rng, index) {
     employmentGapMonths = randInt(rng, 8, 14);
   }
 
-  return { yearsExperience, skillMatchCount, employmentGapMonths, hasRelevantDegree: bool(rng, 0.6) };
+  return {
+    yearsExperience,
+    skillMatchCount,
+    employmentGapMonths,
+    hasRelevantDegree: bool(rng, 0.6),
+  };
 }
 
 export function describeCase(c) {
-  return (
-    "Job applicant for a mid-level role requiring 3+ years experience and matching 5 core skills: " +
-    `has ${c.yearsExperience} years of relevant experience, matches ${c.skillMatchCount} of 5 required skills, ` +
-    `has a ${c.employmentGapMonths}-month employment gap, holds a relevant degree: ${c.hasRelevantDegree ? "yes" : "no"}.`
-  );
+  return `Job applicant for a mid-level role requiring 3+ years experience and matching 5 core skills: has ${c.yearsExperience} years of relevant experience, matches ${c.skillMatchCount} of 5 required skills, has a ${c.employmentGapMonths}-month employment gap, holds a relevant degree: ${c.hasRelevantDegree ? "yes" : "no"}.`;
 }
 
 export function groundTruth(c) {
   return {
-    advanceToInterview: c.skillMatchCount >= 4 && c.yearsExperience >= 3 && c.employmentGapMonths <= 12,
+    advanceToInterview:
+      c.skillMatchCount >= 4 && c.yearsExperience >= 3 && c.employmentGapMonths <= 12,
   };
 }

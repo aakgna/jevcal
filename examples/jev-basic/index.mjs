@@ -4,7 +4,7 @@
 //
 //   node --env-file=../../.env index.mjs
 import { JevAdapter } from "@jevcal/adapter-jev";
-import { defineDecision, DecisionRouter, JsonlStore } from "@jevcal/core";
+import { DecisionRouter, JsonlStore, defineDecision } from "@jevcal/core";
 import { z } from "zod";
 
 const loanDecision = defineDecision({
@@ -31,6 +31,10 @@ for (const [label, adapter] of [
   const result = await router.decide(loanDecision, input);
   console.log(`\n${label}`);
   console.log(`  model:     ${result.model}`);
-  console.log(`  approved:  ${result.fields.approved.value}  (${(result.fields.approved.probability * 100).toFixed(0)}%)`);
-  console.log(`  riskTier:  ${result.fields.riskTier.value}  (${(result.fields.riskTier.probability * 100).toFixed(0)}%)`);
+  console.log(
+    `  approved:  ${result.fields.approved.value}  (${(result.fields.approved.probability * 100).toFixed(0)}%)`,
+  );
+  console.log(
+    `  riskTier:  ${result.fields.riskTier.value}  (${(result.fields.riskTier.probability * 100).toFixed(0)}%)`,
+  );
 }

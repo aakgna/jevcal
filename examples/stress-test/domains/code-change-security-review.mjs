@@ -8,7 +8,11 @@ export const decision = defineDecision({
     requiresSecurityReview: z
       .boolean()
       .describe("Whether this code change requires a manual security review before merge"),
-    severityScore: z.number().min(0).max(10).describe("Estimated security severity of this change, 0 (none) to 10 (critical)"),
+    severityScore: z
+      .number()
+      .min(0)
+      .max(10)
+      .describe("Estimated security severity of this change, 0 (none) to 10 (critical)"),
   }),
 });
 
@@ -36,7 +40,13 @@ export function generateCase(rng, index) {
     linesChanged = choice(rng, [180, 220]);
   }
 
-  return { touchesAuthCode, touchesPaymentCode, addsNewDependency, linesChanged, hasTests: bool(rng, 0.7) };
+  return {
+    touchesAuthCode,
+    touchesPaymentCode,
+    addsNewDependency,
+    linesChanged,
+    hasTests: bool(rng, 0.7),
+  };
 }
 
 export function describeCase(c) {

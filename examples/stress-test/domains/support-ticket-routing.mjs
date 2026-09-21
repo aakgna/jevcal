@@ -5,8 +5,12 @@ import { bool, choice, randInt } from "../lib/rng.mjs";
 export const decision = defineDecision({
   name: "support-ticket-routing",
   fields: z.object({
-    department: z.enum(["billing", "technical", "sales", "account"]).describe("Which team should handle this ticket"),
-    urgent: z.boolean().describe("Whether this ticket needs an immediate response rather than standard queue time"),
+    department: z
+      .enum(["billing", "technical", "sales", "account"])
+      .describe("Which team should handle this ticket"),
+    urgent: z
+      .boolean()
+      .describe("Whether this ticket needs an immediate response rather than standard queue time"),
   }),
 });
 
@@ -53,8 +57,11 @@ export function generateCase(rng, index) {
 }
 
 export function describeCase(c) {
-  const waitPhrase = c.daysWaiting === 0 ? "just now" : `${c.daysWaiting} day(s) ago and is still unresolved`;
-  const impactPhrase = c.revenueImpact ? " The customer says this is actively costing them money." : "";
+  const waitPhrase =
+    c.daysWaiting === 0 ? "just now" : `${c.daysWaiting} day(s) ago and is still unresolved`;
+  const impactPhrase = c.revenueImpact
+    ? " The customer says this is actively costing them money."
+    : "";
   return `Support ticket: customer is ${c.issue}. They first contacted support ${waitPhrase}.${impactPhrase}`;
 }
 

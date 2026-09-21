@@ -5,7 +5,9 @@ import { bool, randInt } from "../lib/rng.mjs";
 export const decision = defineDecision({
   name: "academic-integrity-review",
   fields: z.object({
-    flagForReview: z.boolean().describe("Whether this submission should be flagged for an academic integrity review"),
+    flagForReview: z
+      .boolean()
+      .describe("Whether this submission should be flagged for an academic integrity review"),
     severityTier: z.enum(["low", "medium", "high"]).describe("Severity tier if flagged"),
   }),
 });

@@ -27,7 +27,10 @@ export interface LocalAdapterConfig {
   apiKey?: string;
 }
 
-function buildPrompt<Shape extends z.ZodRawShape>(decision: DecisionSchema<Shape>, state: string): string {
+function buildPrompt<Shape extends z.ZodRawShape>(
+  decision: DecisionSchema<Shape>,
+  state: string,
+): string {
   const shape = decision.valuesSchema.shape;
   const fieldDescriptions = decision.fieldNames
     .map((key) => {
@@ -88,7 +91,9 @@ export class LocalAdapter implements BackendAdapter {
     });
 
     if (!res.ok) {
-      throw new Error(`LocalAdapter request failed: ${res.status} ${res.statusText} — ${await res.text()}`);
+      throw new Error(
+        `LocalAdapter request failed: ${res.status} ${res.statusText} — ${await res.text()}`,
+      );
     }
 
     const body = (await res.json()) as ChatCompletionResponse;

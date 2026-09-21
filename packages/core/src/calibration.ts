@@ -37,7 +37,10 @@ export function computeBrierScore(samples: CalibrationSample[]): number {
 }
 
 /** Bins samples by predicted probability and reports predicted-vs-observed frequency per bin. */
-export function computeReliabilityDiagram(samples: CalibrationSample[], numBins = 10): ReliabilityBin[] {
+export function computeReliabilityDiagram(
+  samples: CalibrationSample[],
+  numBins = 10,
+): ReliabilityBin[] {
   const bins: { probabilitySum: number; correctCount: number; sampleCount: number }[] = Array.from(
     { length: numBins },
     () => ({ probabilitySum: 0, correctCount: 0, sampleCount: 0 }),
@@ -58,7 +61,8 @@ export function computeReliabilityDiagram(samples: CalibrationSample[], numBins 
     return {
       binStart,
       binEnd,
-      avgPredictedProbability: bin.sampleCount > 0 ? bin.probabilitySum / bin.sampleCount : (binStart + binEnd) / 2,
+      avgPredictedProbability:
+        bin.sampleCount > 0 ? bin.probabilitySum / bin.sampleCount : (binStart + binEnd) / 2,
       observedFrequency: bin.sampleCount > 0 ? bin.correctCount / bin.sampleCount : 0,
       sampleCount: bin.sampleCount,
     };

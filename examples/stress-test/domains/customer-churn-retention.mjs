@@ -5,7 +5,9 @@ import { bool, choice, randFloat, randInt } from "../lib/rng.mjs";
 export const decision = defineDecision({
   name: "customer-churn-retention",
   fields: z.object({
-    offerRetentionDiscount: z.boolean().describe("Whether this customer should proactively be offered a retention discount"),
+    offerRetentionDiscount: z
+      .boolean()
+      .describe("Whether this customer should proactively be offered a retention discount"),
     churnRisk: z.enum(["low", "medium", "high"]).describe("Churn risk level"),
   }),
 });

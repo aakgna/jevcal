@@ -4,7 +4,7 @@
 //
 //   AI_GATEWAY_API_KEY=... node index.mjs
 import { GatewayAdapter } from "@jevcal/adapter-gateway";
-import { defineDecision, DecisionRouter, JsonlStore, getCalibration } from "@jevcal/core";
+import { DecisionRouter, JsonlStore, defineDecision, getCalibration } from "@jevcal/core";
 import { z } from "zod";
 
 const loanDecision = defineDecision({
@@ -37,5 +37,9 @@ console.log("Confidence:", result.fields.approved.probability, result.fields.ris
 //   await store.attachOutcome(result.requestId, { field: "approved", actualValue: true, observedAt: new Date().toISOString() });
 // Once enough outcomes are attached:
 const report = await getCalibration(store, { decisionName: "loan-approval", field: "approved" });
-console.log(`\nCalibration so far: n=${report.n} ece=${report.ece.toFixed(3)} brier=${report.brier.toFixed(3)}`);
-console.log("(run this a few dozen times and attach real outcomes via `jevcal outcome` to get a meaningful report)");
+console.log(
+  `\nCalibration so far: n=${report.n} ece=${report.ece.toFixed(3)} brier=${report.brier.toFixed(3)}`,
+);
+console.log(
+  "(run this a few dozen times and attach real outcomes via `jevcal outcome` to get a meaningful report)",
+);

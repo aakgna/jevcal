@@ -44,7 +44,9 @@ export class GatewayAdapter implements BackendAdapter {
     const jsonSchema = zodToJsonSchema(decision.schema);
     const useLogprobs = decision.confidenceStrategy === "logprob";
     const messages =
-      typeof input.input === "string" ? [{ role: "user" as const, content: input.input }] : input.input;
+      typeof input.input === "string"
+        ? [{ role: "user" as const, content: input.input }]
+        : input.input;
 
     const res = await fetch(`${this.config.baseURL}/chat/completions`, {
       method: "POST",
@@ -65,7 +67,9 @@ export class GatewayAdapter implements BackendAdapter {
     });
 
     if (!res.ok) {
-      throw new Error(`GatewayAdapter request failed: ${res.status} ${res.statusText} — ${await res.text()}`);
+      throw new Error(
+        `GatewayAdapter request failed: ${res.status} ${res.statusText} — ${await res.text()}`,
+      );
     }
 
     const body = (await res.json()) as ChatCompletionResponse;

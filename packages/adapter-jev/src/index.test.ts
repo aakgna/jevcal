@@ -92,7 +92,10 @@ describe("JevAdapter — direct transport (api.typesafe.ai)", () => {
 
   it("defaults to direct transport when an apiKey is provided", async () => {
     const fetchMock = mockFetchOnce({ model: "jev-latest", answers: {} });
-    const adapter = new JevAdapter({ apiKey: "test-key", scoreCriteria: { severityScore: ["a", "b"] } });
+    const adapter = new JevAdapter({
+      apiKey: "test-key",
+      scoreCriteria: { severityScore: ["a", "b"] },
+    });
     await adapter.decide(decision, { input: "state" });
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(evaluateMock).not.toHaveBeenCalled();
@@ -125,14 +128,24 @@ describe("JevAdapter — gateway transport (experimental_evaluate)", () => {
     evaluateMock.mockResolvedValue({
       answers: {
         approved: { type: "boolean", probability: 0.81 },
-        riskTier: { type: "choice", choice: "low", probabilities: { low: 0.74, medium: 0.26, high: 0 } },
-        severityScore: { type: "score", score: 0.37, probabilities: { "0": 0.63, "1": 0.37, "2": 0 } },
+        riskTier: {
+          type: "choice",
+          choice: "low",
+          probabilities: { low: 0.74, medium: 0.26, high: 0 },
+        },
+        severityScore: {
+          type: "score",
+          score: 0.37,
+          probabilities: { "0": 0.63, "1": 0.37, "2": 0 },
+        },
       },
       providerMetadata: { typesafe: { confidence: { riskTier: 0.61, severityScore: 0.45 } } },
       response: { modelId: "typesafe-ai/jev" },
     });
 
-    const adapter = new JevAdapter({ scoreCriteria: { severityScore: ["minimal", "moderate", "severe"] } });
+    const adapter = new JevAdapter({
+      scoreCriteria: { severityScore: ["minimal", "moderate", "severe"] },
+    });
     const result = await adapter.decide(decision, { input: "Applicant has a thin credit file." });
 
     expect(evaluateMock).toHaveBeenCalledTimes(1);
@@ -157,8 +170,16 @@ describe("JevAdapter — gateway transport (experimental_evaluate)", () => {
     evaluateMock.mockResolvedValue({
       answers: {
         approved: { type: "boolean", probability: 0.6 },
-        riskTier: { type: "choice", choice: "medium", probabilities: { low: 0.2, medium: 0.7, high: 0.1 } },
-        severityScore: { type: "score", score: 1.0, probabilities: { "0": 0.1, "1": 0.8, "2": 0.1 } },
+        riskTier: {
+          type: "choice",
+          choice: "medium",
+          probabilities: { low: 0.2, medium: 0.7, high: 0.1 },
+        },
+        severityScore: {
+          type: "score",
+          score: 1.0,
+          probabilities: { "0": 0.1, "1": 0.8, "2": 0.1 },
+        },
       },
       providerMetadata: {},
       response: { modelId: "typesafe-ai/jev" },

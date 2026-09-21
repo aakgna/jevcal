@@ -1,7 +1,7 @@
 // Requires AI_GATEWAY_API_KEY (https://vercel.com/docs/ai-gateway).
 //
 //   AI_GATEWAY_API_KEY=... node index.mjs
-import { defineDecision, JsonlStore } from "@jevcal/core";
+import { JsonlStore, defineDecision } from "@jevcal/core";
 import { createJevCalMiddleware } from "@jevcal/vercel-ai";
 import { gateway, generateObject, wrapLanguageModel } from "ai";
 import { z } from "zod";
@@ -29,4 +29,6 @@ const { object } = await generateObject({
 });
 
 console.log("Decision:", object);
-console.log("\nLogged to .jevcal/decisions.jsonl — same store, same `jevcal report` command as every other adapter.");
+console.log(
+  "\nLogged to .jevcal/decisions.jsonl — same store, same `jevcal report` command as every other adapter.",
+);

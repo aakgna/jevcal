@@ -10,7 +10,13 @@ export const decision = defineDecision({
   }),
 });
 
-const purposes = ["debt consolidation", "medical expenses", "car purchase", "home renovation", "wedding"];
+const purposes = [
+  "debt consolidation",
+  "medical expenses",
+  "car purchase",
+  "home renovation",
+  "wedding",
+];
 
 export function generateCase(rng, index) {
   const bucket = index % 3; // 0=clear approve, 1=clear deny, 2=borderline

@@ -1,5 +1,10 @@
 import { computeBrierScore, computeECE, computeReliabilityDiagram } from "./calibration.js";
-import type { CalibrationSample, CorrectnessComparator, DecisionStore, ReliabilityBin } from "./types.js";
+import type {
+  CalibrationSample,
+  CorrectnessComparator,
+  DecisionStore,
+  ReliabilityBin,
+} from "./types.js";
 
 export interface CalibrationReport {
   n: number;

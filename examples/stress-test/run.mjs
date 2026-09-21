@@ -5,7 +5,7 @@
 //   node --env-file=../../.env run.mjs --count=5       # dry run
 import { readFile } from "node:fs/promises";
 import { GatewayAdapter } from "@jevcal/adapter-gateway";
-import { DecisionRouter, getCalibration, JsonlStore } from "@jevcal/core";
+import { DecisionRouter, JsonlStore, getCalibration } from "@jevcal/core";
 import * as academicIntegrityReview from "./domains/academic-integrity-review.mjs";
 import * as codeChangeSecurityReview from "./domains/code-change-security-review.mjs";
 import * as contentModeration from "./domains/content-moderation.mjs";
@@ -53,8 +53,12 @@ function fmtTime(sec) {
 }
 
 async function main() {
-  console.log(`Stress test: ${domains.length} domains x ${COUNT} cases = ${domains.length * COUNT} total calls`);
-  console.log(`Concurrency: ${CONCURRENCY}, pacing delay: ${REQUEST_DELAY_MS}ms, store: ${STORE_PATH}\n`);
+  console.log(
+    `Stress test: ${domains.length} domains x ${COUNT} cases = ${domains.length * COUNT} total calls`,
+  );
+  console.log(
+    `Concurrency: ${CONCURRENCY}, pacing delay: ${REQUEST_DELAY_MS}ms, store: ${STORE_PATH}\n`,
+  );
 
   const summaries = [];
   const overallStart = Date.now();
@@ -130,8 +134,12 @@ async function main() {
     );
   }
   console.log(`\nTotal elapsed: ${fmtTime((Date.now() - overallStart) / 1000)}`);
-  console.log(`Total tokens: ${inputTokens.toLocaleString()} in / ${outputTokens.toLocaleString()} out`);
-  console.log(`Approx cost (gpt-4o-mini list pricing — verify actual in your Gateway dashboard): $${approxCost.toFixed(2)}`);
+  console.log(
+    `Total tokens: ${inputTokens.toLocaleString()} in / ${outputTokens.toLocaleString()} out`,
+  );
+  console.log(
+    `Approx cost (gpt-4o-mini list pricing — verify actual in your Gateway dashboard): $${approxCost.toFixed(2)}`,
+  );
 }
 
 main().catch((err) => {

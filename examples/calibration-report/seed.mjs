@@ -6,7 +6,7 @@
 // have produced, so the calibration-reporting path can be demoed without a live backend.
 // See ../gateway-basic for an example that calls a real endpoint.
 import { randomUUID } from "node:crypto";
-import { defineDecision, JsonlStore } from "@jevcal/core";
+import { JsonlStore, defineDecision } from "@jevcal/core";
 import { z } from "zod";
 
 const loanDecision = defineDecision({
@@ -38,7 +38,11 @@ for (const probability of statedProbabilities) {
         backendId: "demo",
         timestamp: new Date().toISOString(),
         fields: {
-          approved: { value: true, probability, raw: { kind: "self-reported", score: probability } },
+          approved: {
+            value: true,
+            probability,
+            raw: { kind: "self-reported", score: probability },
+          },
         },
         raw: {},
       },
