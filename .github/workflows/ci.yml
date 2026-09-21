@@ -17,6 +17,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
-      - run: pnpm typecheck
+      # build before typecheck: adapter/langchain/vercel-ai/cli packages resolve
+      # @jevcal/core's types from its built dist/, which only exists after build.
       - run: pnpm build
+      - run: pnpm typecheck
       - run: pnpm test

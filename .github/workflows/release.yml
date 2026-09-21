@@ -1,8 +1,12 @@
 name: Release
 
+# Manual trigger only — deliberately not `push: branches: [main]`. This
+# workflow auto-bumps versions, generates changelogs, and opens a "Version
+# Packages" PR (and would publish to npm if NPM_TOKEN were set); none of that
+# should happen on every push before there's been an explicit decision to
+# actually release. Run it from the Actions tab when that decision is made.
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
