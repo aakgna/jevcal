@@ -6,7 +6,7 @@ Know not just what your model decided, but whether its confidence can be trusted
 
 jevcal is a typed-decision and calibration-tracking toolkit for the kind of AI output software consumes directly — classification, routing, rubric-based scoring — not prose a human reads. Define a decision schema once, route it to a backend, and jevcal logs what was predicted alongside its stated confidence. Once you know the real outcome, feed that back in. jevcal computes Expected Calibration Error (ECE), Brier score, and reliability diagrams — the standard tools for answering "when this said 90% confident, was it actually right 90% of the time?"
 
-This is the Python counterpart to [`@jevcal/core`](https://www.npmjs.com/package/@jevcal/core) (TypeScript) — same wire format on disk, so a `.jevcal/decisions.jsonl` file written by one can be read by the other's tooling.
+This is the Python counterpart to `@jevcal/core` ([TypeScript source](https://github.com/aakgna/jevcal/tree/main/packages/core), not yet published to npm) — same wire format on disk, so a `.jevcal/decisions.jsonl` file written by one can be read by the other's tooling.
 
 ## Install
 
