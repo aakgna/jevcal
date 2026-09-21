@@ -1,0 +1,14 @@
+{
+  "name": "jev-basic-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node index.mjs"
+  },
+  "dependencies": {
+    "@jevcal/adapter-jev": "workspace:*",
+    "@jevcal/core": "workspace:*",
+    "ai": "^7.0.0",
+    "zod": "^3.24.1"
+  }
+}

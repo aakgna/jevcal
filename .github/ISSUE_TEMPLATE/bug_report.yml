@@ -1,0 +1,27 @@
+name: Bug report
+description: Something in jevcal isn't working as expected
+labels: ["bug"]
+body:
+  - type: input
+    attributes:
+      label: Package and version
+      placeholder: "@jevcal/adapter-gateway@0.1.0"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: What happened?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Minimal repro
+      description: A decision schema + adapter config that reproduces it, if possible.
+      render: typescript
+    validations:
+      required: false

@@ -1,0 +1,12 @@
+{
+  "name": "calibration-report-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "seed": "node seed.mjs"
+  },
+  "dependencies": {
+    "@jevcal/core": "workspace:*",
+    "zod": "^3.24.1"
+  }
+}

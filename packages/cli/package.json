@@ -1,0 +1,28 @@
+{
+  "name": "@jevcal/cli",
+  "version": "0.1.0",
+  "description": "jevcal command-line tool: attach outcome labels and print calibration reports (ECE, Brier, reliability diagrams).",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "jevcal": "./bin/jevcal.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "bin"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@jevcal/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

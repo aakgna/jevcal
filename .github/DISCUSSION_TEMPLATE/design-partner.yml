@@ -1,0 +1,38 @@
+title: "[Design Partner] "
+labels: ["design-partner"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Using jevcal in production, or planning to? Tell us about it — this is how we track whether the calibration-wedge is landing, and it's the fastest way to get our attention for support with a real deployment.
+  - type: input
+    attributes:
+      label: Company / project
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: What decision(s) are you running through jevcal?
+      placeholder: e.g. loan approval triage, support ticket routing, content moderation...
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Backend
+      options:
+        - Jev
+        - AI Gateway / OpenAI-compatible
+        - Local open reproduction
+        - Custom adapter
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Roughly how many decisions/day?
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Anything blocking production use right now?
+    validations:
+      required: false

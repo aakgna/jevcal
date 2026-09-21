@@ -1,0 +1,13 @@
+{
+  "name": "gateway-basic-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node index.mjs"
+  },
+  "dependencies": {
+    "@jevcal/adapter-gateway": "workspace:*",
+    "@jevcal/core": "workspace:*",
+    "zod": "^3.24.1"
+  }
+}
