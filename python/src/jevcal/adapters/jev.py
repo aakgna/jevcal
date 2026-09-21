@@ -129,8 +129,14 @@ class JevAdapter:
             kind = field_types[field_name]
             if kind == "noul":
                 noul = answer.get("noul", 0)
-                values[field_name] = noul > 0.5
-                confidence_signals[field_name] = NativeSignal(probability=noul)
+                predicted_true = noul > 0.5
+                values[field_name] = predicted_true
+                # noul is P(statement is true), not confidence in whichever
+                # value got predicted — flip it when the predicted value is
+                # false, so `probability` uniformly means "confidence in the
+                # predicted value" across every ConfidenceSignal kind. See
+                # the invariant documented on ConfidenceSignal in types.py.
+                confidence_signals[field_name] = NativeSignal(probability=noul if predicted_true else 1 - noul)
             else:  # choice or score
                 values[field_name] = answer.get("choice") if kind == "choice" else answer.get("score")
                 confidence_signals[field_name] = NativeSignal(

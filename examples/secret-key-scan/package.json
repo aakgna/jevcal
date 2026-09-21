@@ -1,0 +1,13 @@
+{
+  "name": "secret-key-scan-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node main.mjs"
+  },
+  "dependencies": {
+    "@jevcal/adapter-jev": "workspace:*",
+    "@jevcal/core": "workspace:*",
+    "zod": "^3.24.1"
+  }
+}

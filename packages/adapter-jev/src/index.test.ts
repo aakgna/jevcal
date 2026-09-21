@@ -90,6 +90,43 @@ describe("JevAdapter — direct transport (api.typesafe.ai)", () => {
     expect(result.model).toBe("jev-1.13.0");
   });
 
+  it("flips noul into confidence-in-predicted-value when the model confidently predicts false", async () => {
+    // noul is P(statement is true). A confident false prediction (noul=0.05) must
+    // report probability=0.95 (confidence in "false"), not 0.05 — regression test
+    // for the boolean calibration semantics bug.
+    const fetchMock = mockFetchOnce({
+      model: "jev-1.13.0",
+      answers: {
+        approved: { type: "noul", noul: 0.05 },
+        riskTier: {
+          type: "choice",
+          choice: "high",
+          confidence: 0.7,
+          probabilities: { low: 0.1, medium: 0.2, high: 0.7 },
+        },
+        severityScore: {
+          type: "score",
+          score: 1.8,
+          confidence: 0.6,
+          probabilities: { "0": 0.0, "1": 0.3, "2": 0.7 },
+          legend: { "0": "none", "1": "moderate", "2": "severe" },
+        },
+      },
+      usage: { input_tokens: 100, output_tokens: 20 },
+    });
+
+    const adapter = new JevAdapter({
+      apiKey: "test-key",
+      scoreCriteria: { severityScore: ["none", "moderate", "severe"] },
+    });
+
+    const result = await adapter.decide(decision, { input: "Applicant has a thin credit file." });
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(result.values.approved).toBe(false);
+    expect(result.confidenceSignals.approved).toEqual({ kind: "native", probability: 0.95 });
+  });
+
   it("defaults to direct transport when an apiKey is provided", async () => {
     const fetchMock = mockFetchOnce({ model: "jev-latest", answers: {} });
     const adapter = new JevAdapter({
@@ -164,6 +201,34 @@ describe("JevAdapter — gateway transport (experimental_evaluate)", () => {
     });
     expect(result.values.severityScore).toBe(0.37);
     expect(result.model).toBe("typesafe-ai/jev");
+  });
+
+  it("flips gateway boolean probability into confidence-in-predicted-value when the model confidently predicts false", async () => {
+    evaluateMock.mockResolvedValue({
+      answers: {
+        approved: { type: "boolean", probability: 0.12 },
+        riskTier: {
+          type: "choice",
+          choice: "high",
+          probabilities: { low: 0.05, medium: 0.15, high: 0.8 },
+        },
+        severityScore: {
+          type: "score",
+          score: 1.9,
+          probabilities: { "0": 0.05, "1": 0.15, "2": 0.8 },
+        },
+      },
+      providerMetadata: { typesafe: { confidence: { riskTier: 0.8, severityScore: 0.75 } } },
+      response: { modelId: "typesafe-ai/jev" },
+    });
+
+    const adapter = new JevAdapter({
+      scoreCriteria: { severityScore: ["minimal", "moderate", "severe"] },
+    });
+    const result = await adapter.decide(decision, { input: "Applicant has a thin credit file." });
+
+    expect(result.values.approved).toBe(false);
+    expect(result.confidenceSignals.approved).toEqual({ kind: "native", probability: 0.88 });
   });
 
   it("falls back to the top distribution probability when providerMetadata.typesafe.confidence is absent", async () => {

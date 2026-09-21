@@ -182,10 +182,21 @@ export class JevAdapter implements BackendAdapter {
       }
 
       switch (fieldTypes[fieldKey]) {
-        case "bool":
-          values[fieldKey] = (answer.noul ?? 0) > 0.5;
-          confidenceSignals[fieldKey] = { kind: "native", probability: answer.noul ?? 0 };
+        case "bool": {
+          const noul = answer.noul ?? 0;
+          const predictedTrue = noul > 0.5;
+          values[fieldKey] = predictedTrue;
+          // noul is P(statement is true), not confidence in whichever value
+          // got predicted — flip it when the predicted value is false, so
+          // `probability` uniformly means "confidence in the predicted
+          // value" across every ConfidenceSignal kind, matching what
+          // self-reported and logprob signals already mean.
+          confidenceSignals[fieldKey] = {
+            kind: "native",
+            probability: predictedTrue ? noul : 1 - noul,
+          };
           break;
+        }
         case "choice":
           values[fieldKey] = answer.choice;
           confidenceSignals[fieldKey] = {
@@ -241,8 +252,14 @@ export class JevAdapter implements BackendAdapter {
       }
 
       if (fieldTypes[fieldKey] === "bool" && answer.type === "boolean") {
-        values[fieldKey] = answer.probability > 0.5;
-        confidenceSignals[fieldKey] = { kind: "native", probability: answer.probability };
+        const predictedTrue = answer.probability > 0.5;
+        values[fieldKey] = predictedTrue;
+        // Same fix as the direct transport: gateway's boolean `probability`
+        // is also P(true), not confidence in the predicted value.
+        confidenceSignals[fieldKey] = {
+          kind: "native",
+          probability: predictedTrue ? answer.probability : 1 - answer.probability,
+        };
       } else if (answer.type === "choice" || answer.type === "score") {
         const reported = typesafeConfidence?.confidence?.[fieldKey];
         const distribution = answer.probabilities;

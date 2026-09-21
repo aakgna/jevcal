@@ -87,6 +87,43 @@ def test_maps_fields_to_noul_choice_score_and_sends_model_in_body(monkeypatch):
     assert result.model == "jev-1.13.0"
 
 
+def test_flips_noul_into_confidence_in_predicted_value_when_confidently_false(monkeypatch):
+    # noul is P(statement is true). A confident false prediction (noul=0.05) must
+    # report probability=0.95 (confidence in "false"), not 0.05 — regression test
+    # for the boolean calibration semantics bug.
+    def fake_post(url, headers, json, timeout):
+        return FakeResponse(
+            {
+                "model": "jev-1.13.0",
+                "answers": {
+                    "approved": {"type": "noul", "noul": 0.05},
+                    "risk_tier": {
+                        "type": "choice",
+                        "choice": "high",
+                        "confidence": 0.7,
+                        "probabilities": {"low": 0.1, "medium": 0.2, "high": 0.7},
+                    },
+                    "severity_score": {
+                        "type": "score",
+                        "score": 1.8,
+                        "confidence": 0.6,
+                        "probabilities": {"0": 0.0, "1": 0.3, "2": 0.7},
+                    },
+                },
+                "usage": {"input_tokens": 100, "output_tokens": 20},
+            }
+        )
+
+    monkeypatch.setattr(httpx, "post", fake_post)
+
+    adapter = JevAdapter(JevAdapterConfig(api_key="test-key", score_criteria={"severity_score": ["none", "moderate", "severe"]}))
+    result = adapter.decide(decision, DecisionInput(input="Applicant has a thin credit file."))
+
+    assert result.values["approved"] is False
+    assert result.confidence_signals["approved"].kind == "native"
+    assert result.confidence_signals["approved"].probability == 0.95
+
+
 def test_raises_clear_error_when_number_field_missing_score_criteria(monkeypatch):
     monkeypatch.setattr(httpx, "post", lambda *a, **k: FakeResponse({"answers": {}}))
     adapter = JevAdapter(JevAdapterConfig(api_key="test-key"))

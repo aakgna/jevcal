@@ -3,6 +3,21 @@ import type { DecisionSchema } from "./schema.js";
 
 export type ConfidenceStrategy = "self-reported" | "logprob" | "none";
 
+/**
+ * Invariant every adapter must uphold: `probability` (on the `self-reported`
+ * and `native` variants) and the value derived from `avgLogprob` always mean
+ * **confidence that the predicted value is correct** — never a raw,
+ * direction-specific probability like "P(this field is true)". For a
+ * boolean field those are only the same number when the predicted value is
+ * `true`; when the model confidently predicts `false`, a raw P(true) would
+ * be *low* even though the model is highly confident. If your backend's
+ * native signal is direction-specific (e.g. Jev's `noul`, which is
+ * literally P(statement is true)), flip it at the adapter boundary — `p` if
+ * the predicted value is true, `1 - p` if false — before constructing this
+ * signal. Getting this wrong doesn't crash anything; it silently produces a
+ * calibration report that looks catastrophically miscalibrated for a model
+ * that's actually fine, which is worse than crashing.
+ */
 export type ConfidenceSignal =
   | { kind: "logprob"; avgLogprob: number; tokenCount: number }
   | { kind: "self-reported"; score: number }
@@ -12,7 +27,7 @@ export type ConfidenceSignal =
 
 export interface FieldPrediction<T = unknown> {
   value: T;
-  /** Normalized 0-1 probability, or null if the backend reported no usable confidence signal. */
+  /** Normalized 0-1 confidence that `value` is correct, or null if the backend reported no usable confidence signal. */
   probability: number | null;
   raw?: ConfidenceSignal;
 }

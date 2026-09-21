@@ -90,6 +90,18 @@ importers:
         specifier: ^3.24.1
         version: 3.25.76
 
+  examples/secret-key-scan:
+    dependencies:
+      '@jevcal/adapter-jev':
+        specifier: workspace:*
+        version: link:../../packages/adapter-jev
+      '@jevcal/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      zod:
+        specifier: ^3.24.1
+        version: 3.25.76
+
   examples/stress-test:
     dependencies:
       '@jevcal/adapter-gateway':

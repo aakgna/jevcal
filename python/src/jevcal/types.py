@@ -40,12 +40,25 @@ class NoneSignal(WireModel):
     kind: Literal["none"] = "none"
 
 
+# Invariant every adapter must uphold: the numeric confidence on
+# self-reported/native signals (and the value derived from avg_logprob)
+# always means confidence that the PREDICTED value is correct — never a raw,
+# direction-specific probability like "P(this field is true)". For a boolean
+# field those are only the same number when the predicted value is True;
+# when a model confidently predicts False, a raw P(true) would be *low* even
+# though the model is highly confident. If your backend's native signal is
+# direction-specific (e.g. Jev's `noul`, literally P(statement is true)),
+# flip it at the adapter boundary — p if the predicted value is True, 1 - p
+# if False — before constructing this signal. Getting this wrong doesn't
+# crash anything; it silently produces a calibration report that looks
+# catastrophically miscalibrated for a model that's actually fine, which is
+# worse than crashing. (See adapters/jev.py for the reference fix.)
 ConfidenceSignal = Union[LogprobSignal, SelfReportedSignal, NativeSignal, NoneSignal]
 
 
 class FieldPrediction(WireModel):
     value: Any
-    # Normalized 0-1 probability, or None if the backend reported no usable confidence signal.
+    # Normalized 0-1 confidence that `value` is correct, or None if the backend reported no usable confidence signal.
     probability: float | None
     raw: ConfidenceSignal | None = Field(default=None, discriminator="kind")
 
